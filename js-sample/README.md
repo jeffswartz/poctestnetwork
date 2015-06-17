@@ -1,5 +1,5 @@
-Sample app for the OpenTok.js connection and stream statistics API
-==================================================================
+Sample app for the OpenTok.js stream statistics API
+===================================================
 
 ## Testing the app
 

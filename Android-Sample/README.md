@@ -1,5 +1,5 @@
-Sample app for the OpenTok.js connection and stream statistics API
-==================================================================
+Sample app for the OpenTok Android SDK stream statistics API
+============================================================
 
 ## Testing the app
 
@@ -22,7 +22,8 @@ To configure the app:
 4. Locate the armeabi and x86 directories in the OpenTok/libs directory of the OpenTok
    Android SDK, and drag them into the app/jniLibs directory of the project.
 
-5. Set the following variables to a test OpenTok session ID, token, and API key:
+5. In the com.opentok.qualitystats.sample.MainAcdtivity.java class, set the following properties
+   to a test OpenTok session ID, token, and API key:
 
    ```
    private static final String SESSION_ID = "";
