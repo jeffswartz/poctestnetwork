@@ -125,7 +125,7 @@ videoNetworkStatsUpdated:(OTSubscriberKitVideoNetworkStats*)stats
 }
 ```
 
-The `[self processStats:]` method calculates the video packet loss ratio,
+The `[OTNetworkTest processStats:]` method calculates the video packet loss ratio,
 stored as `video_pl_ratio`, or the audio packet loss ratio, stored as
 `audio_pl_ratio`, depending on the stats passed in.
 
@@ -205,7 +205,7 @@ audioNetworkStatsUpdated:(OTSubscriberKitAudioNetworkStats*)stats
 ```
 
 When the subscriber starts streaming, it sets up a timer that calls the
-`[self checkQualityAndDisconnectSession]` method after the test duration (10 seconds):
+`[OTNetworkTest checkQualityAndDisconnectSession]` method after the test duration (10 seconds):
 
 ```
 
@@ -230,7 +230,7 @@ When the subscriber starts streaming, it sets up a timer that calls the
     }
 }
 ```
-The `[self checkQualityAndDisconnectSession]` method checks to see if the client
+The `[OTNetworkTest checkQualityAndDisconnectSession]` method checks to see if the client
 can support publishing video and audio, based on the video and audio bandwidth and
 packet loss ratio, collected by the OTSubscriberKitNetworkStatsDelegate:
 
@@ -240,6 +240,7 @@ BOOL canDoAudio = (audio_bw < 25000 || audio_pl_ratio > 0.05);
 ```
 
 The method sets a `result` property with the appropriate result and passes it into
-the `dispatchResultsToDelegateWithResult` method, which calls the `networkTestDidCompleteWithResult`
-delegate method. The view controller receives this result and displays a message in
-the user interface based on the result.
+the `[OTNetworkTest dispatchResultsToDelegateWithResult:]` method, which calls
+the `[OTNetworkTest networkTestDidCompleteWithResult:]` delegate method. The view
+controller receives this result and displays a message in the user interface based on
+the result.
