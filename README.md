@@ -10,7 +10,7 @@ statistics API.
 
 ## OpenTok Android SDK API additions
 
-The OpenTok Android SDK library includes the following API additions (which are not included in the
+The OpenTok Android SDK includes the following API additions (which are not included in the
 main documentation).
 
 ### SubscriberKit.setAudioStatsListener(AudioStatsListener listener)
@@ -58,6 +58,40 @@ The method has one parameter -- listener​-- which is method that implements th
 * `videoPacketsReceived`​-- (int) The total number of video packets received by the subscriber
 * `timestamp`​-- (double) The timestamp, in milliseconds since the Unix epoch, for
   when these stats were gathered
+
+## OpenTok iOS SDK API additions
+
+The OpenTok iOS SDK includes the following API additions (which are not included in the
+main documentation).
+
+### [OTSubscriberKit setNetworkStatsDelegate:]
+
+Sets up a delegate object for subscriber quality statistics. This object implements the OTSubscriberKitNetworkStatsDelegate protocol. This object is sent messages reporting the following:
+
+* Total audio and video packets lost
+* Total audio and video packets received
+* Total audio and video bytes received
+
+### [OTSubscriberKitNetworkStatsDelegate subscriber: audioNetworkStatsUpdated:]
+
+This message is sent periodically to report audio statistics for the subscriber. The second parameter, stats, which is defined by the OTSubscriberKitAudioNetworkStats interface, includes the following properties:
+
+* `audioBytesReceived` (uint64_t) -- The total number of audio bytes received by the subscriber
+* `audioPacketsLost` (uint64_t) -- The total number of audio packetsthat did not reach the
+  subscriber
+* `audioPacketsReceived` (uint64_t) -- The total number of audio packets received by the subscriber
+* `timestamp` (double) -- The timestamp, in milliseconds since the Unix epoch, for when these stats
+  were gathered
+
+### [OTSubscriberKitNetworkStatsDelegate subscriber: videoNetworkStatsUpdated:]
+
+This message is sent periodically to report video statistics for the subscriber. The second parameter, stats, which is defined by the OTSubscriberKitVideoNetworkStats interface, includes the following properties:
+
+* `videoBytesReceived` (uint64_t) -- The total number of video bytes received by the subscriber
+* `videoPacketsLost` (uint64_t) -- The total number of video packets lost by the subscriber
+* `videoPacketsReceived` (uint64_t) -- The total number of video packets received by the subscriber
+* `timestamp` (double) -- The timestamp, in milliseconds since the Unix epoch, for when these stats
+  were gathered
 
 ## OpenTok.js API additions
 
