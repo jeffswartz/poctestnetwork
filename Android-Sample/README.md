@@ -11,12 +11,13 @@ To configure the app:
    this project, select the build.gradle file, and then click the OK button. The project opens in a
    new window.
 
-   The Java code for the application is the ChatActivity class in the
-   com.tokbox.android.demo.learningopentok package.
+   The Java code for the application is the MainActivity class in the
+   com.tokbox.qualitystats.sample package.
 
 2. Download the [OpenTok Android SDK](https://tokbox.com/opentok/libraries/client/android/).
+   This sample requires version 2.5.0 or later.
 
-3. Locate the opentok-android-sdk-2.4.0.jar file in the OpenTok/libs directory of the OpenTok
+3. Locate the opentok-android-sdk-2.x.x.jar file in the OpenTok/libs directory of the OpenTok
    Android SDK, and drag it into the app/libs directory of the project.
 
 4. Locate the armeabi and x86 directories in the OpenTok/libs directory of the OpenTok
@@ -70,14 +71,13 @@ view tree, so the test video is not displayed.
 When subscribing to the stream, the app calls the `setVideoStatsListener(videoStatsListener)`
 method of the Subscriber object. 
 
-```
+```java
 private void subscribeToStream(Stream stream) {
     mSubscriber = new Subscriber(MainActivity.this, stream);
 
     mSubscriber.setSubscriberListener(this);
     mSession.subscribe(mSubscriber);
     mSubscriber.setVideoStatsListener(new VideoStatsListener() {
-
         @Override
         public void onVideoStats(SubscriberKit subscriber,
                                  SubscriberKit.SubscriberVideoStats stats) {
@@ -100,8 +100,6 @@ private void subscribeToStream(Stream stream) {
                 startTimeAudio = System.currentTimeMillis()/1000;
             }
             checkAudioStats(stats);
-
-
         }
     });
 }
