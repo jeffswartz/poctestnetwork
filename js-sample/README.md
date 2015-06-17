@@ -69,6 +69,14 @@ subscriber = session.subscribe(
 );
 ```
 
+Note that the code sets the `testNetwork` option of the `Session.subscribe()` method to `true`.
+This causes the app to actually use the stream returned by the OpenTok Media Router.
+(By default, when you subscribe to a stream you publish, OpenTok.js simply uses the local camera
+fead as the video display for the Subscriber element in the HTML DOM.)
+
+Also, the code sets the `audioVolume` option of the `Session.subscribe()` method to `0`, so that
+the subscriber does not cause audio feedback.
+
 The DOM elements for the publisher and subscriber are not added to the HTML DOM,
 so the test video is not displayed:
 
@@ -76,11 +84,6 @@ so the test video is not displayed:
 var publisherEl = document.createElement('div'),
     subscriberEl = document.createElement('div'),
 ```
-
-Note that we set the `testNetwork` option of the `Session.subscribe()` method to `true`.
-This causes the app to actually use the stream returned by the OpenTok Media Router.
-(By default, when you subscribe to a stream you publish, OpenTok.js simply uses the local camera
-fead as the video display for the Subscriber element in the HTML DOM.)
 
 Upon subscribing to the test stream, the app calls the `testStreamingCapability()` function.
 This function calls the `performQualityTest()` function, which is defined in the
@@ -94,9 +97,9 @@ config.subscriber.getStats(function(error, stats) {
 }
 ```
 
-The `Subscriber.getStats()` method is not included in the main OpenTok.js documentation. This
-method gets the stream statistics for the subscriber and (on success) passes them into the
-completion handler. The statistics include information on the stream's audio and video:
+The `Subscriber.getStats()` method gets the stream statistics for the subscriber and (on success)
+passes them into the completion handler. The statistics include information on the stream's audio
+and video:
 
 * `bytesReceived` -- The cumulative number of media (audio or video) bytes received by the
    subscriber since the `getStats()` method was called.
@@ -111,13 +114,13 @@ Based on these statistics (and comparing them to the statistics from the previou
 completion handler for the `Subscriber.getStats()` method assembles a `snapshot` object,
 which includes the the following:
 
-* `bitsPerSecond` -- bits per second
+* `bitsPerSecond` -- Bits per second
 
-* `packetLossRatioPerSecond` -- packet loss ratio per second
+* `packetLossRatioPerSecond` -- Packet loss ratio per second
 
-* `packetsLostPerSecond` -- packets lost per second
+* `packetsLostPerSecond` -- Packets lost per second
 
-* `packetsPerSecond` -- packets per second
+* `packetsPerSecond` -- Packets per second
 
 The BandwidthCalculator stores these in a buffer. The `performQualityTest()` function logs the stats
 to the debug console.
