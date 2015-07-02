@@ -2,11 +2,95 @@ OpenTok stream statistics API
 =============================
 Sample code for the OpenTok stream statistics API.
 
+This is an experimental feature, which is not included in the current OpenTok documentation.
+
+## About the stream statistics API
+
+This API lets you dynamically monitor the following statistics for a subscriber:
+
+* Audio and video bytes received
+
+* Audio and video packets lost
+
+* Audio and video packets received
+
+This API is only available in sessions that use the OpenTok Media Router.
+
+## Uses of the API
+
+You can use the stream statistics API to determine the appropriate audio and video settings to use in publishing a stream to an OpenTok session. This repo includes sample apps showing this.
+
+You can also use the stream statistics API to enable or disable video or audio when quality
+diminishes. For example, you may use the stats to switch to audio only when a stream's quality falls
+below a threshold. Note that the OpenTok client library implements this feature automatically for
+sessions that use the OpenTok Media Router. When you publish a stream, you can disable the automatic
+audio-only fallback feature and use the stream statistics API to implement your own control of which
+streams are used:
+
+* In OpenTok.js, set the `audioFallbackEnabled` to `false` in the properties object you pass into the `OT.initPublisher()` method.
+
+* In the OpenTok Android SDK, call `Publisher.setAudioFallbackEnabled(false)`.
+
+* In the OpenTok iOS SDK, set the `Publisher.audioFallbackEnabled` property to `NO`.
+
 ## Sample code
 
-See the sample subdirectories to see sample code for using this API. Each sample
-subdirectory includes a README.md file that describes how the app uses the stream
+See the sample subdirectories to see sample code for using this API.
+
+This repo includes sample code showing how to use the stream statistics API in each of the OpenTok
+client SDKs: for web, Android, and JavaScript. Each sample shows how to use this API to determine
+the appropriate audio and video settings to use in publishing a stream to an OpenTok session. To do
+this, each sample app publishes a test stream to the session and then uses the API to check the
+quality of that stream. Based on the quality, the app determines what the client can successfully
+publish to the session:
+
+* The client can publish an audio-video stream at the specified resolution.
+
+* The client can publish an audio-only stream.
+
+* The client is unable to publish.
+
+Each sample subdirectory includes a README.md file that describes how the app uses the stream
 statistics API.
+
+## Interpretting stream statistics
+
+You can use the stream statisics to determine the ability to send and receive streams. The following tables interpret results (for audio-video sessions and audio-only sessions), with the following quality designations:
+
+* Excellent —- None or imperceptible impairments in media
+
+* Acceptable —- Some impairments in media, leading to some momentaneous disruptions
+
+The video resolutions listed are representative of common resolutions. You can determine support for
+other resolutions by interpolating the results of the closest resolutions listed.
+
+### Audio-video streams
+
+For the given qualities and resolutions, all the following conditions must met.
+
+| Quality    | Video resolution @ fps | Bandwidth (kbps) | Packet loss |
+| ----------------------------------- | ---------------- | ----------- |
+| Excellent  | 1280x720 @ 30          | > 1000           | < 0.5%      |
+| Excellent  | 640x480 @ 30           | > 600            | < 0.5%      |
+| Excellent  | 320x240 @ 30           | > 300            | < 0.5%      |
+| Acceptable | 1280x720 @ 30          | > 350            | < 0.3%      |
+| Acceptable | 640x480 @ 30           | > 250            | < 0.3%      |
+| Acceptable | 320x240 @ 30           | > 150            | < 0.3%      |
+
+Note that you can calculate the video bandwidth and packet loss based on the video bytes received
+and video packets received statistics provided by the API. See the sample app for code.
+
+### Audio-only streams
+
+For the given qualities, the following conditions must met.
+
+| Quality    | Bandwidth (kbps) | Packet loss |
+| ---------- | ---------------- | ----------- |
+| Excellent  | > 60             | < 0.5%      |
+| Acceptable | > 50             | < 5%        |
+
+Note that you can calculate the audio bandwidth and packet loss based on the audio bytes received
+and audio packets received statistics provided by the API. See the sample app for code.
 
 ## OpenTok Android SDK API additions
 

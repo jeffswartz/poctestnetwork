@@ -1,6 +1,20 @@
 Sample app for the OpenTok.js stream statistics API
 ===================================================
 
+This sample shows how to use this OpenTok.js stream statistics API to determine the appropriate
+audio and video settings to use in publishing a stream to an OpenTok session. To do this, the app
+publishes a test stream to the session and then uses the API to check the quality of that stream.
+Based on the quality, the app determines what the client can successfully publish to the session:
+
+* The client can publish an audio-video stream at the specified resolution.
+
+* The client can publish an audio-only stream.
+
+* The client is unable to publish.
+
+The sample app only subscribes to the test stream. It does not subscribe to other streams in the
+session.
+
 ## Testing the app
 
 This sample app uses Node.js as a web server.
@@ -167,3 +181,7 @@ performQualityTest({subscriber: subscriber, timeout: 5000}, function(error, resu
   });
 });
 ```
+
+Note that this sample app uses thresholds based on the table in the "Interpretting stream
+statistics" section of the main README file of this repo. You may change the threshold values used
+in your own app, based on the video resolution your app uses and your quality requirements.
