@@ -53,7 +53,7 @@ publish to the session:
 Each sample subdirectory includes a README.md file that describes how the app uses the stream
 statistics API.
 
-## Interpretting stream statistics
+## Interpreting stream statistics
 
 You can use the stream statisics to determine the ability to send and receive streams. The following tables interpret results (for audio-video sessions and audio-only sessions), with the following quality designations:
 
