@@ -69,7 +69,7 @@ other resolutions by interpolating the results of the closest resolutions listed
 For the given qualities and resolutions, all the following conditions must met.
 
 | Quality    | Video resolution @ fps | Bandwidth (kbps) | Packet loss |
-| ----------------------------------- | ---------------- | ----------- |
+| --------- | ---------------------- | ---------------- | ----------- |
 | Excellent  | 1280x720 @ 30          | > 1000           | < 0.5%      |
 | Excellent  | 640x480 @ 30           | > 600            | < 0.5%      |
 | Excellent  | 320x240 @ 30           | > 300            | < 0.5%      |
