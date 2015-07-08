@@ -1,27 +1,35 @@
 OpenTok Pre-Call Test
-=============================
-This repository contains a sample code, which helps developer to diagnose if the end user's call will be succesful or not  given their network conditions. Pre-call test can be implemented as a step end user has to run before joining the session. Based on the test results, the developer can decide if the end user should be allowed to join the session, joined in audio-only mode or not.
+=====================
 
-This is an experimental/beta feature, feel free to use it on your own risk. It can be a subject to change in future releases. Please provide any feedback at denis [at] tokbox.com.
+This repository contains sample code that shows how to diagnose if the client's call (publishing
+a stream to an OpenTok session) will be succesful or not, given their network conditions. The
+pre-call test can be implemented as a step the client runs before joining the session. Based on the
+test results, the app can decide if the client should be allowed to publish a stream to the session
+and whether that stream should use audio-only mode or not.
 
-Pre-call test is supported in:
+This is an experimental/beta feature. It can be a subject to change in future releases.
+Please provide any feedback at denis [at] tokbox.com.
+
+The pre-call test is supported in:
 
 *  [OpenTok Android SDK 2.6](https://tokbox.com/developer/sdks/android/)
 *  [OpenTok iOS SDK 2.6](https://tokbox.com/developer/sdks/ios/)
 *  [OpenTok.js 2.6](https://tokbox.com/developer/sdks/js/)
 
-
 ## How does it work
 
-* Create a publisher from the provided Session ID and token
+The sample apps each do the following:
 
-* Eastablish a test call using the created publisher and subscribe to yourself fir the specified amount of time
+1. Connect to an OpenTok session and publish a test stream to the session.
 
-* During the call, the underline WebRTC engine will stabilize the video quality based on the available network connection quality
+2. Subscribe to your own test stream for a test period.
 
-* Collect the basic network statistics from WebRTC engine using the Network Stats API (see below): bandwidth, packet loss, etc
+   During the test period, the video quality will stabilize, based on the available network
+   connection quality.
 
-* Compare the network stats against your thresholds (see below) and decide what is the outcome of the test
+3. Collect the bandwidth and packet loss statistics using the Network Stats API (see below).
+
+4. Compare the network stats against thresholds (see below) to determine the outcome of the test.
 
 Please see the sample code for details.
 
@@ -37,42 +45,38 @@ It is an undocumented and experimental API, which you dynamically monitor the fo
 
 This API is only available in sessions that use the OpenTok Media Router.
 
+For details on the API additions, see the README file in each of the sample directories.
 
 ## Thresholds and interpretting network statisics
 
-You can use the network statisics to determine the ability to send and receive streams, 
-and as a result have a quality experience during the OpenTok call. 
+You can use the network statisics to determine the ability to send and receive streams,
+and as a result have a quality experience during the OpenTok call.
 
-Please keep in mind, everybody's use case is different, and everybody's 
-perception of the call quality is different. Therefore you should adjust 
-the default thresholds and timeframe in accordance to your use case and expectations. 
-For example, the 720p @  30 fps call requires much a much better network 
-connection than 320x480 @ 15 fps, so you need to set a much higher 
-threshold values in order to qualify a vialble end user connection. 
-Also the longer you run the test, the more accurate values you will receive.
-At the same time, you might want to switch audio-only or not based on 
-your specific use case. 
+Please keep in mind, everybody's use case and perception of the call quality is different.
+Therefore you should adjust the default thresholds and timeframe in accordance to your use case
+and expectations. For example, the 720p, 30 fps video call requires much a much better network
+connection than 320x480-pixel, 15 fps video, so you need to set a much higher threshold values
+in order to qualify a vialble end user connection. Also the longer you run the test, the more
+accurate values you will receive. At the same time, you might want to switch audio-only or not
+based on your specific use case. 
 
 The Pre-Call Test is implementated as a sample code to make it easier 
 for developer to customize their application logic.
 
-Below we provide an example of the thresholds for popular combinations 
-of resolutions and frame rates. The following tables interpret results 
-(for audio-video sessions and audio-only sessions), with the following quality designations:
+Below are examples of the thresholds for popular video resolution-frame rate combinations.
+The following tables interpret results (for audio-video sessions and audio-only sessions),
+with the following quality designations:
 
 * Excellent —- None or imperceptible impairments in media
 
-* Acceptable —- Some impairments in media, leading to some momentaneous disruptions
-
-The video resolutions listed are representative of common resolutions. You can determine support for
-other resolutions by interpolating the results of the closest resolutions listed.
+* Acceptable —- Some impairments in media, leading to some momentary disruptions
 
 ### Audio-video streams
 
 For the given qualities and resolutions, all the following conditions must met.
 
 | Quality    | Video resolution @ fps | Bandwidth (kbps) | Packet loss |
-| --------- | ---------------------- | ---------------- | ----------- |
+| ---------- | ---------------------- | ---------------- | ----------- |
 | Excellent  | 1280x720 @ 30          | > 1000           | < 0.5%      |
 | Excellent  | 640x480 @ 30           | > 600            | < 0.5%      |
 | Excellent  | 320x240 @ 30           | > 300            | < 0.5%      |
@@ -80,8 +84,13 @@ For the given qualities and resolutions, all the following conditions must met.
 | Acceptable | 640x480 @ 30           | > 250            | < 0.3%      |
 | Acceptable | 320x240 @ 30           | > 150            | < 0.3%      |
 
-Note that you can calculate the video bandwidth and packet loss based on the video bytes received
-and video packets received statistics provided by the API. See the sample app for code.
+You can calculate the video bandwidth and packet loss based on the video bytes received
+and video packets received statistics provided by the Network Statistics API. See the sample app
+for code.
+
+The video resolutions listed are representative of common resolutions. You can determine support for
+other resolutions by interpolating the results of the closest resolutions listed.
+
 
 ### Audio-only streams
 
@@ -93,17 +102,16 @@ For the given qualities, the following conditions must met.
 | Acceptable | > 50             | < 5%        |
 
 Note that you can calculate the audio bandwidth and packet loss based on the audio bytes received
-and audio packets received statistics provided by the API. See the sample app for code.
-
+and audio packets received statistics provided by the API. See the sample apps for code.
 
 ## Sample code
 
-This repo includes sample code showing how to build a pre-call test using each of the OpenTok
-Client SDKs 2.6: Android, iOS and JavaScript. Each sample shows how to determine the 
+This repo includes sample code showing how to build a pre-call test using version 2.6 of each of
+the OpenTok client SDKs: Android, iOS, and JavaScript. Each sample shows how to determine the
 the appropriate audio and video settings to use in publishing a stream to an OpenTok session. To do
-this, each sample app publishes a test stream to the session and then uses the Network Stats API to check the
-quality of that stream. Based on the quality, the app determines what the client can successfully
-publish to the session:
+this, each sample app publishes a test stream to the session and then uses the Network Stats API to
+check the quality of that stream. Based on the quality, the app determines what the client can
+successfully publish to the session:
 
 * The client can publish an audio-video stream at the specified resolution.
 
@@ -111,35 +119,43 @@ publish to the session:
 
 * The client is unable to publish.
 
-Each sample subdirectory includes a README.md file that describes how the app uses the stream
-statistics API.
-
+Each sample subdirectory includes a README file that describes how the app uses the network
+stats API.
 
 ## Frequently Asked Questions (FAQ)
 
 * Why does the OpenTok Network Stats API values are different from my Speedtest.net results?
-Speedtest.net tests your network connection, while the Network Stats API shows how 
-the WebRTC engine (and OpenTok) will perform on your connection. 
+
+  Speedtest.net tests your network connection, while the Network Stats API shows how
+  the WebRTC engine (and OpenTok) will perform on your connection. 
 
 * Why are the Network Stats API results quite inconsistent?
-The WebRTC requires some time to stablize the quality of the call for the specific 
-connection. If you will allow the pre-call test to run longer, you should receive 
-more consistent results.
-Also, please, make sure that you're using routed session instead of relayed. 
-More info here: https://tokbox.com/developer/concepts/relayed-vs-routed/
+
+  The WebRTC requires some time to stablize the quality of the call for the specific
+  connection. If you will allow the pre-call test to run longer, you should receive
+  more consistent results. Also, please, make sure that you're using routed OpenTok session
+  instead of a relayed on. For more information, see [The OpenTok Media Router and media
+  modes](https://tokbox.com/developer/guides/create-session/#media-mode)
 
 * Why the output values are really low when my user is streaming Netflix movies?
-The WebRTC is conservative in choosing the allowed bandwidth. For example, 
-if there is another high-bandwidth consumer on the network, the WebRTC will 
-try to set its own usage to the minimum.
 
-* The pre-call test shows the "Excellent" (or "Acceptable") result, 
-but the video still gets pixalated during the call.
-You can increase the required threshholds to better qualify the end user connection.
-Please keep in mind, the network connection can change overtime, especially on mobile devices.
+  WebRTC is conservative in choosing the allowed bandwidth. For example, 
+  if there is another high-bandwidth consumer on the network, WebRTC will 
+  try to set its own usage to the minimum.
+
+* The pre-call test shows the "Excellent" (or "Acceptable") result, but the video still gets
+  pixalated during the call.
+
+  You can increase the required threshholds to better qualify the end user connection.
+  Please keep in mind, the network connection can change overtime, especially on mobile devices.
 
 * There is no documentation of the Network Stats API on TokBox website.
-Yes, it is an experimental/beta API, which can be changed in future.
 
-* Why do I get compilation errors on iOS or/and Android.
-It's a experimental and undocumented API. Please refer to our sample code on how to include it in your project. You should be using OpenTok iOS SDK 2.6 or OpenTok Android SDK 2.6.
+  This is an experimental/beta API, which may changed in future. For documentation on the current
+  API, see the README file in each of the sample directories.
+
+* Why do I get compilation errors on iOS or Android.
+
+  This is a experimental and undocumented API. Please refer to our sample code on how to use
+  the API enhancements in your project. You should be using OpenTok iOS SDK 2.6 or
+  OpenTok Android SDK 2.6.
