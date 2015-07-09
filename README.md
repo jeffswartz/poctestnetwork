@@ -22,12 +22,17 @@ The sample apps each do the following:
 
 1. Connect to an OpenTok session and publish a test stream to the session.
 
+   Note that the published test stream is visible to all clients in the session. If your
+   app has other clients connected while you publish the test stream, to can prevent
+   thems from subscribing to the test stream, you can add the name "test" to the
+   published stream, and check the stream name when the stream is created in the session.
+
 2. Subscribe to your own test stream for a test period.
 
    During the test period, the video quality will stabilize, based on the available network
    connection quality.
 
-3. Collect the bandwidth and packet loss statistics using the Network Stats API (see below).
+3. Collect the bitrate and packet loss statistics using the Network Stats API (see below).
 
 4. Compare the network stats against thresholds (see below) to determine the outcome of the test.
 
@@ -35,7 +40,7 @@ Please see the sample code for details.
 
 ## Network Stats API
 
-It is an undocumented and experimental API, which you dynamically monitor the following statistics for a subscriber:
+This is an undocumented and experimental API, which you dynamically monitor the following statistics for a subscriber:
 
 * Audio and video bytes received 
 
@@ -67,41 +72,45 @@ Below are examples of the thresholds for popular video resolution-frame rate com
 The following tables interpret results (for audio-video sessions and audio-only sessions),
 with the following quality designations:
 
-* Excellent —- None or imperceptible impairments in media
+* Excellent - None or imperceptible impairments in media
 
-* Acceptable —- Some impairments in media, leading to some momentary disruptions
+* Acceptable - Some impairments in media, leading to some momentary disruptions
 
 ### Audio-video streams
 
 For the given qualities and resolutions, all the following conditions must met.
 
-| Quality    | Video resolution @ fps | Bandwidth (kbps) | Packet loss |
-| ---------- | ---------------------- | ---------------- | ----------- |
-| Excellent  | 1280x720 @ 30          | > 1000           | < 0.5%      |
-| Excellent  | 640x480 @ 30           | > 600            | < 0.5%      |
-| Excellent  | 320x240 @ 30           | > 300            | < 0.5%      |
-| Acceptable | 1280x720 @ 30          | > 350            | < 0.3%      |
-| Acceptable | 640x480 @ 30           | > 250            | < 0.3%      |
-| Acceptable | 320x240 @ 30           | > 150            | < 0.3%      |
+| Quality    | Video resolution @ fps | Video kbps  | Packet loss |
+| ---------- | ---------------------- | ----------- | ----------- |
+| Excellent  | 1280x720 @ 30          | > 1000      | < 0.5%      |
+| Excellent  | 640x480 @ 30           | > 600       | < 0.5%      |
+| Excellent  | 352x288 @ 30           | > 300       | < 0.5%      |
+| Excellent  | 320x240 @ 30           | > 300       | < 0.5%      |
+| Acceptable | 1280x720 @ 30          | > 350       | < 0.3%      |
+| Acceptable | 640x480 @ 30           | > 250       | < 0.3%      |
+| Excellent  | 352x288 @ 30           | > 150       | < 0.3%      |
+| Acceptable | 320x240 @ 30           | > 150       | < 0.3%      |
 
-You can calculate the video bandwidth and packet loss based on the video bytes received
-and video packets received statistics provided by the Network Statistics API. See the sample app
+Note that the default publish settings for video are 640x480 pixels @ 30 fps in OpenTok.js.
+The default is 352x288 @ 30 fps in the OpenTok Android SDK and the OpenTok iOS SDK.
+
+You can calculate the video kbps and packet loss based on the video bytes received and
+video packets received statistics provided by the Network Statistics API. See the sample app
 for code.
 
 The video resolutions listed are representative of common resolutions. You can determine support for
 other resolutions by interpolating the results of the closest resolutions listed.
 
-
 ### Audio-only streams
 
 For the given qualities, the following conditions must met.
 
-| Quality    | Bandwidth (kbps) | Packet loss |
-| ---------- | ---------------- | ----------- |
-| Excellent  | > 60             | < 0.5%      |
-| Acceptable | > 50             | < 5%        |
+| Quality    | Audio kbps | Packet loss |
+| ---------- | ---------- | ----------- |
+| Excellent  | > 30       | < 0.5%      |
+| Acceptable | > 25       | < 5%        |
 
-Note that you can calculate the audio bandwidth and packet loss based on the audio bytes received
+Note that you can calculate the audio kbps and packet loss based on the audio bytes received
 and audio packets received statistics provided by the API. See the sample apps for code.
 
 ## Sample code
