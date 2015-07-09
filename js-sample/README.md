@@ -38,8 +38,11 @@ To configure the app:
 Now you can run the app:
 
 ```
-node server
+npm start
 ```
+
+Note that ```npm start``` calls ```watchify``` to pick up any changes you may make to the JavaScript
+in the app. (Simply running ```node server``` will not pick up these changes.)
 
 By default, the app runs on port 5000.
 
@@ -59,7 +62,7 @@ By default, the app runs on port 5000.
 
 ## Understanding the code
 
-The JavaScript code that uses OpenTok.js is in the src/js directory.
+The JavaScript code uses the OpenTok.js file is in the src/js directory.
 
 The node app (see the server.js file) uses the OpenTok Node.js server SDK to generate
 a session and a token for the session. Note that the app uses a session that uses the
@@ -145,14 +148,18 @@ they support publishing video or publishing audio-only, based on thresholds for 
 bitrate, the video packet loss ratio, and the audio packet loss ratio:
 
 ```javascript
-if (results.video.bitsPerSecond > 150000 && results.video.packetLossRatioPerSecond < 0.03 && results.audio.packetLossRatioPerSecond < 0.03) {
+var audioVideoSupported = results.video.bitsPerSecond > 250000
+  && results.video.packetLossRatioPerSecond < 0.03
+  && results.audio.bitsPerSecond > 25000
+  && results.audio.packetLossRatioPerSecond < 0.05
+if (audioVideoSupported) {
   return callback(false, {
     text: "You're all set!",
     icon: 'assets/icon_tick.svg'
   });
 }
 
-if ((results.video.packetLossRatioPerSecond + results.audio.packetLossRatioPerSecond) / 2 < 0.05) {
+if (results.audio.packetLossRatioPerSecond < 0.05) {
   return callback(false, {
     text: 'Your bandwidth can support audio only',
     icon: 'assets/icon_warning.svg'
@@ -165,11 +172,15 @@ the quality test again, this time using an audio-only stream. At the end of this
 app determines whether conditions support audio-only:
 
 ```javascript
+// try audio only to see if it reduces the packet loss
 statusMessageEl.innerText = 'Trying audio only';
 publisher.publishVideo(false);
 
 performQualityTest({subscriber: subscriber, timeout: 5000}, function(error, results) {
-  if (results.audio.packetLossRatioPerSecond < 0.05) {
+  var audioSupported = results.audio.bitsPerSecond > 25000
+    && results.audio.packetLossRatioPerSecond < 0.05;
+
+  if (audioSupported) {
     return callback(false, {
       text: 'Your bandwidth can support audio only',
       icon: 'assets/icon_warning.svg'
